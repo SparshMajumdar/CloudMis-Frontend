@@ -75,7 +75,7 @@ export function Navbar({ onMenuClick, showMenuButton = false }: NavbarProps) {
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="relative h-9 w-9 rounded-full">
                 <Avatar className="h-9 w-9">
-                  <AvatarFallback>JD</AvatarFallback>
+                  <AvatarFallback>SM</AvatarFallback>
                 </Avatar>
               </Button>
             </DropdownMenuTrigger>

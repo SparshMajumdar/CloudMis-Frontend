@@ -22,7 +22,7 @@ const routes = [
   {
     label: "Misconfigurations",
     icon: AlertTriangle,
-    href: "/dashboard/misconfigurations",
+    href: "/misconfigurations",
     color: "text-orange-500",
   },
   {
@@ -34,7 +34,7 @@ const routes = [
   {
     label: "Activity",
     icon: Activity,
-    href: "/dashboard/activity",
+    href: "/activity",
     color: "text-pink-500",
   },
   {
