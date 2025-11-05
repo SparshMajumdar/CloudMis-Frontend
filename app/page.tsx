@@ -11,6 +11,7 @@ export default function Home() {
     <div className="min-h-screen flex flex-col">
       <Navbar />
 
+      {/* Hero Section */}
       <section className="relative py-20 px-4 bg-gradient-to-b from-background to-secondary/20">
         <div className="container mx-auto max-w-6xl">
           <div className="text-center space-y-6">
@@ -25,9 +26,11 @@ export default function Home() {
               Detect AWS misconfigurations in real-time and automate response with our
               Mini-SOAR system. Stay compliant and secure your cloud infrastructure effortlessly.
             </p>
+
+            {/* ✅ Updated buttons */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center pt-6">
               <Button asChild size="lg" className="text-lg h-12 px-8">
-                <Link href="/login">
+                <Link href="/signup">
                   Get Started <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
               </Button>
@@ -39,6 +42,7 @@ export default function Home() {
         </div>
       </section>
 
+      {/* How It Works Section */}
       <section className="py-20 px-4">
         <div className="container mx-auto max-w-6xl">
           <div className="text-center mb-16">
@@ -91,6 +95,7 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Key Features Section */}
       <section className="py-20 px-4 bg-secondary/20">
         <div className="container mx-auto max-w-6xl">
           <div className="text-center mb-16">
@@ -101,6 +106,7 @@ export default function Home() {
           </div>
 
           <div className="grid md:grid-cols-2 gap-8">
+            {/* Feature Cards */}
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -220,6 +226,7 @@ export default function Home() {
         </div>
       </section>
 
+      {/* About CloudSecure */}
       <section className="py-20 px-4">
         <div className="container mx-auto max-w-4xl">
           <Card className="border-2">
@@ -252,6 +259,7 @@ export default function Home() {
         </div>
       </section>
 
+      {/* CTA Section */}
       <section className="py-20 px-4 bg-primary/5">
         <div className="container mx-auto max-w-4xl text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
@@ -262,8 +270,9 @@ export default function Home() {
             with automated security.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            {/* ✅ Updated this too */}
             <Button asChild size="lg" className="text-lg h-12 px-8">
-              <Link href="/login">
+              <Link href="/signup">
                 Get Started Now <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
@@ -274,6 +283,7 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Footer */}
       <footer className="py-8 px-4 border-t">
         <div className="container mx-auto max-w-6xl">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
@@ -287,6 +297,9 @@ export default function Home() {
               </Link>
               <Link href="/playbooks" className="hover:text-foreground transition-colors">
                 Playbooks
+              </Link>
+              <Link href="/signup" className="hover:text-foreground transition-colors">
+                Sign Up
               </Link>
               <Link href="/login" className="hover:text-foreground transition-colors">
                 Login

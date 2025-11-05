@@ -1,28 +1,55 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { getProfile } from "@/lib/api";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { StatsCard } from "@/components/dashboard/stats-card";
 import { SeverityBadge } from "@/components/dashboard/severity-badge";
 import { StatusBadge } from "@/components/dashboard/status-badge";
 import { mockMisconfigurations } from "@/lib/mock-data";
-import { TriangleAlert as AlertTriangle, CircleCheck as CheckCircle, Clock, Shield, TrendingDown, TrendingUp } from "lucide-react";
-import {
-  BarChart,
-  Bar,
-  PieChart,
-  Pie,
-  Cell,
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-} from "recharts";
+import { TriangleAlert as AlertTriangle, CircleCheck as CheckCircle, Clock, Shield } from "lucide-react";
+import dynamic from "next/dynamic";
+import { ResponsiveContainer, PieChart, Pie, Cell, BarChart, Bar, CartesianGrid, XAxis, YAxis, Tooltip } from "recharts";
+
+// Dynamically import the charts to prevent SSR issues
+const SeverityChart = dynamic(() => import("./charts").then(mod => mod.SeverityChart), { ssr: false });
+const ResourceTypeChart = dynamic(() => import("./charts").then(mod => mod.ResourceTypeChart), { ssr: false });
+const TrendChart = dynamic(() => import("./charts").then(mod => mod.TrendChart), { ssr: false });
 
 export default function DashboardPage() {
+  const router = useRouter();
+  const [user, setUser] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  // 🔒 Authentication check
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const data = await getProfile();
+        if (!data || data.message === "Invalid or expired token") {
+          router.push("/login");
+        } else {
+          setUser(data);
+        }
+      } catch (error) {
+        router.push("/login");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchUser();
+  }, [router]);
+
+  if (loading) {
+    return <p className="p-6 text-muted-foreground">Loading dashboard...</p>;
+  }
+
+  if (!user) {
+    return <p className="p-6 text-red-500">Unauthorized. Redirecting to login...</p>;
+  }
+
+  // Dashboard Data (mocked for now)
   const totalIssues = mockMisconfigurations.length;
   const criticalIssues = mockMisconfigurations.filter((m) => m.severity === "Critical").length;
   const openIssues = mockMisconfigurations.filter((m) => m.status === "Open").length;
@@ -74,13 +101,17 @@ export default function DashboardPage() {
 
   return (
     <div className="p-6 space-y-6">
+      {/* Header */}
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Security Dashboard</h1>
         <p className="text-muted-foreground mt-2">
-          Monitor and manage AWS security misconfigurations across your infrastructure
+          Welcome back, <span className="font-semibold">{user.fullName}</span> 👋
+          <br />
+          Monitor and manage AWS security misconfigurations across your infrastructure.
         </p>
       </div>
 
+      {/* Stats Summary */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <StatsCard
           title="Total Issues"
@@ -112,6 +143,7 @@ export default function DashboardPage() {
         />
       </div>
 
+      {/* Charts Section */}
       <div className="grid gap-4 md:grid-cols-2">
         <Card>
           <CardHeader>
@@ -160,31 +192,18 @@ export default function DashboardPage() {
         </Card>
       </div>
 
+      {/* Trend and Custom Charts */}
       <Card>
         <CardHeader>
           <CardTitle>Security Trend</CardTitle>
           <CardDescription>Total issues over the past week</CardDescription>
         </CardHeader>
         <CardContent>
-          <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={trendData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="date" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Line
-                type="monotone"
-                dataKey="issues"
-                stroke="#3b82f6"
-                strokeWidth={2}
-                dot={{ r: 4 }}
-              />
-            </LineChart>
-          </ResponsiveContainer>
+          <TrendChart data={trendData} />
         </CardContent>
       </Card>
 
+      {/* Recent Misconfigurations */}
       <Card>
         <CardHeader>
           <CardTitle>Recent Misconfigurations</CardTitle>
@@ -207,7 +226,7 @@ export default function DashboardPage() {
                   <div className="flex items-center gap-4 text-xs text-muted-foreground mt-2">
                     <span className="font-mono">{misc.resourceId}</span>
                     <span>{misc.region}</span>
-                    <span>{new Date(misc.detectedAt).toLocaleDateString()}</span>
+                    <span>{new Date(misc.detectedAt).toISOString().split("T")[0]}</span>
                   </div>
                 </div>
               </div>
